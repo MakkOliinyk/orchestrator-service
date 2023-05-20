@@ -1,4 +1,8 @@
+import { createPath } from "../paths";
+
 const userRoutes = async (fastify) => {
+    const getFullPath = createPath('IDENTITY');
+
     fastify.get('/user/me', async (request, reply) => {
 
     });
