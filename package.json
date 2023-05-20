@@ -1,0 +1,23 @@
+{
+  "name": "orchestrator-service",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MakkOliinyk/orchestrator-service.git"
+  },
+  "author": "Mark Oliinyk",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MakkOliinyk/orchestrator-service/issues"
+  },
+  "homepage": "https://github.com/MakkOliinyk/orchestrator-service#readme",
+  "dependencies": {
+    "fastify": "^4.17.0",
+    "fastify-plugin": "^4.5.0"
+  }
+}
