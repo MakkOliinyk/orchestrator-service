@@ -1,5 +1,4 @@
 const axios = require('axios');
-const fs = require('fs');
 const contentDisposition = require('content-disposition');
 const fileUploadMiddleware = require('busboy-firebase');
 
@@ -14,8 +13,6 @@ const getFullPath = createPath('FILE');
 module.exports = (app) => {
     app.post('/files', [isAuthenticated, fileUploadMiddleware], async (request, reply) => {
         try {
-            // const archive = await getPackagingUtils().getArchive(request, reply);
-
             const form = createFormData(
                 request.files[0].buffer,
                 request.files[0].originalname,
@@ -68,8 +65,6 @@ module.exports = (app) => {
 
             request.file = buffer;
             request.fileName = fileName;
-
-            // const file = await getPackagingUtils().getFile(request, reply);
 
             reply.header('Content-Disposition', `attachment; filename=${fileName}`);
             reply.type('application/octet-stream');
