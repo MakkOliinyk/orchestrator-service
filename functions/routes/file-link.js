@@ -2,30 +2,32 @@ const axios = require("axios");
 
 const createPath = require("../paths");
 const isAuthenticated = require('../middlewares/auth');
-const createLink = require("../middlewares/createLink");
+const { createLink, getFileId } = require("../utils/links");
 
-const getFullPath = createPath('FILE_LINK');
+const getFullPath = createPath('FILE');
 
 module.exports = (app) => {
-    app.get('/links/:fileId', isAuthenticated, async (request, reply) => {
-        request.fileId = request.params.fileId;
+    app.post('/links', isAuthenticated, async (request, reply) => {
+        try {
+            request.fileId = request.body.fileId;
 
-        const link = await createLink(request, reply);
+            const link = await createLink(request, reply);
 
-        reply.send(link);
+            reply.send(link);
+        } catch (error) {
+            reply.send(error);
+        }
     });
 
-    app.get('/links/:linkId', isAuthenticated, async (request, reply) => {
-        const { linkId } = request.params;
-
+    app.get('/links/:linkId', async (request, reply) => {
         try {
-            const response = await axios.get(getFullPath(`/links/${linkId}`));
+            const fileId = await getFileId(request, reply);
 
-            console.log(`Success: File id retrieved successfully`);
-            reply.status(200).send({ message: 'File id retrieved successfully', id: response.data.fileId });
+            const filesResponse = await axios.get(getFullPath(`/documents/${fileId}/info`));
+
+            reply.status(200).send({ fileId, fileName: filesResponse.data.fileName });
         } catch (error) {
-            console.error('Error: Failed to retrieve file id', error);
-            reply.status(500).send({ error: 'Error: Failed to retrieve file id' });
+            reply.send(error);
         }
     });
 };
