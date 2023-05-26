@@ -2,10 +2,19 @@ const axios = require("axios");
 
 const createPath = require("../paths");
 const isAuthenticated = require('../middlewares/auth');
+const createLink = require("../middlewares/createLink");
 
 const getFullPath = createPath('FILE_LINK');
 
 module.exports = (app) => {
+    app.get('/links/:fileId', isAuthenticated, async (request, reply) => {
+        request.fileId = request.params.fileId;
+
+        const link = await createLink(request, reply);
+
+        reply.send(link);
+    });
+
     app.get('/links/:linkId', isAuthenticated, async (request, reply) => {
         const { linkId } = request.params;
 
