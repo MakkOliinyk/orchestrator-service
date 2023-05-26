@@ -20,9 +20,9 @@ module.exports = (app) => {
             });
 
             reply.header('Authorization', `Bearer ${data.token}`);
-            reply.send(data.user);
+            reply.send({ user: data.user, token: data.token });
         } catch (error) {
-            reply.status(400).send(error);
+            reply.status(500).send(error);
         }
     });
 
