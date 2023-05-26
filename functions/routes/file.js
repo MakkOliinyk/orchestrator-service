@@ -56,12 +56,14 @@ module.exports = (app) => {
 
         try {
             const response = await axios.get(getFullPath(`/documents/${fileId}`), {
-                responseType: 'arraybuffer'
+                responseType: 'arraybuffer',
             });
 
             const buffer = Buffer.from(response.data, 'binary');
 
-            const fileName = contentDisposition.parse(response.headers['content-disposition']).parameters.filename;
+            const fileName = contentDisposition.parse(
+                response.headers['content-disposition']
+            ).parameters.filename;
 
             request.file = buffer;
             request.fileName = fileName;
@@ -81,8 +83,7 @@ module.exports = (app) => {
                 params: { ownerId: request.user.id }
             });
 
-            const { data: { files } } = response;
-            reply.send({ files });
+            reply.send({ files: response.data.files });
         } catch (error) {
             console.error('Error: Failed to retrieve files', error);
             reply.status(500).send({ error: 'Error: Failed to retrieve files' });
