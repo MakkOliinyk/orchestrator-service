@@ -10,7 +10,6 @@ module.exports = (app) => {
         const { body } = request;
 
         try {
-            console.log('BODY', body);
             const { data } = await axios({
                 method: 'post',
                 url: getFullPath('/register'),
