@@ -4,7 +4,7 @@ const fileUploadMiddleware = require('busboy-firebase');
 
 const createPath = require("../paths");
 const createFormData = require("../utils/createFormData");
-const createLink = require("../middlewares/createLink");
+const { createLink } = require("../utils/links");
 const isAuthenticated = require('../middlewares/auth');
 const getPackagingUtils = require('../middlewares/packaging');
 
@@ -46,8 +46,8 @@ module.exports = (app) => {
             console.log(`Success: File deleted successfully`);
             reply.status(200).send({ message: 'File deleted successfully' });
         } catch (error) {
-            console.error('Error: Failed to upload file', error);
-            reply.status(500).send({ error: 'Error: Failed to upload file' });
+            console.error('Error: Failed to delete file', error);
+            reply.status(500).send(error);
         }
     });
 
