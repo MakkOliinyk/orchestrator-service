@@ -25,6 +25,7 @@ module.exports = () => {
                 from: 'http_client',
                 to: host,
                 status: tokens.status(req, res),
+                time: tokens.date(req, res, 'iso'),
                 responseTime: tokens['response-time'](req, res),
             });
         }, {

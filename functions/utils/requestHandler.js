@@ -18,6 +18,7 @@ const requestHandler = () => {
     axios.interceptors.request.use((config) => {
         const traceId = config.headers['x-trace-id'] || '';
         config.headers['x-trace-id'] = traceId || v4();
+        config.metadata = { startTime: new Date() };
 
         return config;
     });
@@ -30,9 +31,13 @@ const requestHandler = () => {
                 const traceId = response.config.headers['x-trace-id'];
                 const { method, url } = response.config;
                 const { status } = response;
-                const responseTime = response.headers['response-time'];
 
                 const [domain, path] = extractRouteDetails(url);
+
+                const startTime = response.config.metadata.startTime;
+                const endTime = new Date();
+                const timeDiff = endTime - startTime;
+                const formattedTime = (timeDiff / 1000).toFixed(3);
 
                 const log = {
                     method,
@@ -40,8 +45,11 @@ const requestHandler = () => {
                     to: domain,
                     url: path,
                     status,
-                    responseTime,
+                    time: startTime.toISOString(),
+                    responseTime: formattedTime,
                 };
+
+                if (domain === getFullPath('/')) return response;
 
                 axios
                     .post(getFullPath('/logs'), { traceId, log })
