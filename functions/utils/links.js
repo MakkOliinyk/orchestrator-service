@@ -1,6 +1,5 @@
-const axios = require("axios");
-
 const createPath = require("../paths");
+const axios = require('../utils/requestHandler');
 
 const getFullPath = createPath('FILE_LINK');
 

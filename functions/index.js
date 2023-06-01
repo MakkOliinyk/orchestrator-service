@@ -1,6 +1,6 @@
-const express = require('express');
 const functions = require('firebase-functions');
-const cors = require('cors');
+
+const createApp = require('./utils/createApp');
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
@@ -8,8 +8,11 @@ const identityServiceRoutes = require('./routes/identity');
 const fileServiceRoutes = require('./routes/file');
 const fileLinkServiceRoutes = require('./routes/file-link');
 
-const app = express();
-app.use(cors({ credentials: true, exposedHeaders: ['Content-Disposition'] }));
+const app = createApp();
+
+app.get('/', (req, res) => {
+    res.send('Hello, world!');
+});
 
 identityServiceRoutes(app);
 fileLinkServiceRoutes(app);

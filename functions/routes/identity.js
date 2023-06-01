@@ -1,7 +1,7 @@
-const axios = require("axios");
-
 const createPath = require("../paths");
 const isAuthenticated = require('../middlewares/auth');
+
+const axios = require('../utils/requestHandler');
 
 const getFullPath = createPath('IDENTITY');
 

@@ -1,4 +1,3 @@
-const axios = require('axios');
 const contentDisposition = require('content-disposition');
 const fileUploadMiddleware = require('busboy-firebase');
 
@@ -7,6 +6,8 @@ const createFormData = require("../utils/createFormData");
 const { createLink } = require("../utils/links");
 const isAuthenticated = require('../middlewares/auth');
 const getPackagingUtils = require('../middlewares/packaging');
+
+const axios = require('../utils/requestHandler');
 
 const getFullPath = createPath('FILE');
 
