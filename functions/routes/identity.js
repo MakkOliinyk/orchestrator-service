@@ -1,23 +1,37 @@
 const createPath = require("../paths");
 const isAuthenticated = require('../middlewares/auth');
 
-const axios = require('../utils/requestHandler');
-
 const getFullPath = createPath('IDENTITY');
 
 module.exports = (app) => {
+    app.get('/user/ping', async (request, reply) => {
+        try {
+            const response = await makeRequest(getFullPath('/ping'));
+            const json = await response.json();
+
+            reply.send(json);
+        } catch (error) {
+            reply.send(error);
+        }
+    });
+
     app.post('/user/register', async (request, reply) => {
         const { body } = request;
 
         try {
-            const { data } = await axios({
-                method: 'post',
-                url: getFullPath('/register'),
-                data: {
-                    email: body.email,
-                    password: body.password,
-                }
-            });
+            const response = await makeRequest(
+                getFullPath('/register'),
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json;charset=utf-8'
+                    },
+                    body: JSON.stringify({
+                        email: body.email,
+                        password: body.password,
+                    })
+                });
+            const data = await response.json();
 
             reply.header('Authorization', `Bearer ${data.token}`);
             reply.send({ user: data.user, token: data.token });
@@ -30,14 +44,17 @@ module.exports = (app) => {
         const { body, headers } = request;
 
         try {
-            const { data } = await axios({
-                method: 'post',
-                url: getFullPath('/login'),
-                headers: {
-                    Authorization: headers.authorization,
-                },
-                data: body,
-            });
+            const response = await makeRequest(
+                getFullPath('/login'),
+                {
+                    method: 'POST',
+                    headers: {
+                        Authorization: headers.authorization,
+                        'Content-Type': 'application/json;charset=utf-8'
+                    },
+                    body: JSON.stringify(body),
+                });
+            const data = await response.json();
 
             reply.header('Authorization', `Bearer ${data.token}`);
             reply.send(data.user);
@@ -58,17 +75,19 @@ module.exports = (app) => {
         const { headers } = request;
 
         try {
-            const response = await axios({
-                method: 'post',
-                url: getFullPath('/logout'),
-                headers: {
-                    authorization: headers.authorization,
-                },
-                data: {},
-            });
+            const response = await makeRequest(
+                getFullPath('/logout'),
+                {
+                    method: 'POST',
+                    headers: {
+                        authorization: headers.authorization,
+                        'Content-Type': 'application/json;charset=utf-8'
+                    },
+                });
+            const data = await response.json();
 
             reply.removeHeader('authorization');
-            reply.send(response.data);
+            reply.send(data);
         } catch (error) {
             throw new Error(error);
         }
