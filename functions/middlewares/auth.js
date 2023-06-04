@@ -7,15 +7,17 @@ module.exports = async (req, res, next) => {
     const { headers } = req;
 
     try {
-        const response = await axios({
-            method: 'get',
-            url: getFullPath('/me'),
-            headers: {
-                Authorization: headers.authorization,
-            }
-        });
+        const response = await makeRequest(
+            getFullPath('/me'),
+            {
+                method: 'get',
+                headers: {
+                    Authorization: headers.authorization,
+                }
+            });
+        const data = await response.json();
 
-        req.user = response.data.user;
+        req.user = data.user;
         next();
     } catch (error) {
         res.send(error);
