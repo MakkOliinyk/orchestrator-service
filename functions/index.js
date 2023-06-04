@@ -9,11 +9,6 @@ const fileServiceRoutes = require('./routes/file');
 const fileLinkServiceRoutes = require('./routes/file-link');
 
 const app = createApp();
-// app.use(makeRequest);
-
-app.get('/', (req, res) => {
-    res.send('Hello, world!');
-});
 
 identityServiceRoutes(app);
 fileLinkServiceRoutes(app);
